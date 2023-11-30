@@ -1,0 +1,253 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: URL Shortener
+servers:
+  - url: http://localhost:8080
+paths:
+  /urls:
+    post:
+      summary: Create a short URL
+      operationId: createShortUrl
+      tags:
+        - urls
+      requestBody:
+        description: Data Transfer Object to create a shortURL
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShortUrlCreateDto"
+      responses:
+        '201':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                fullUrl: https://www.example.com
+                shortUrlId: N2sO07E
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 400
+                message: string isn't a valid URL, it needs a protocol, domain and TLD
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 500
+                message: internal server error
+    get:
+      summary: Obtain all short URL IDs
+      operationId: getShortUrlIdsByFullUrl
+      tags:
+        - urls
+      parameters:
+        - name: fullUrl
+          in: query
+          required: true
+          description: The full URL with which the short URL IDs will be retrieved
+          schema:
+            type: string
+            example: https://example.com
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                - shortUrlId: GTjtRBR
+                  visits: 3
+                - shortUrlId: 6exEpbS
+                  visits: 5
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 400
+                message: string isn't a valid URL, it needs a protocol, domain and TLD
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 500
+                message: internal server error
+  /urls/{shortUrlId}:
+    get:
+      summary: Redirect to original URL
+      operationId: getRedirection
+      tags:
+        - urls
+      parameters:
+        - name: shortUrlId
+          in: path
+          required: true
+          description: The short URL with which the full URL will be retrieved
+          schema:
+            type: string
+            example: aB1cD2e
+      responses:
+        '303':
+          description: Expected response to a valid request
+          headers:
+            Location:
+              description: The original URL
+              schema:
+                type: string
+                format: uri
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 400
+                message: Short URL ID isn't provided
+        '404':
+          description: ShortURL not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 404
+                message: No resource found
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 500
+                message: internal server error
+  /urls/{shortUrlId}/metrics:
+    get:
+      summary: Obtain metrics of short URL
+      operationId: getMetricsByShortUrlId
+      tags:
+        - urls
+      parameters:
+        - name: shortUrlId
+          in: path
+          required: true
+          description: The short URL with which the URL metrics will be retrieved
+          schema:
+            type: string
+            example: aB1cD2e
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                shortUrlId: N2sO07E
+                visits: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 400
+                message: Short URL ID isn't provided
+        '404':
+          description: ShortURL not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 404
+                message: No resource found
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+              example:
+                timestamp: 2023-11-28T21:27:40.589Z
+                statusCode: 500
+                message: internal server error
+components:
+  schemas:
+    ShortUrlCreateDto:
+      type: object
+      properties:
+        fullUrl:
+          type: string
+          example: https://example.com
+      required:
+        - fullUrl
+    ShortUrlDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        fullUrl:
+          type: string
+        shortUrlId:
+          type: string
+    ShortUrlSearchDto:
+      type: object
+      properties:
+        shortUrlIds:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShortUrlMetricsDto"
+    ShortUrlMetricsDto:
+      type: object
+      properties:
+        shortUrlId:
+          type: string
+        visits:
+          type: integer
+          format: int64
+    ErrorDto:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        statusCode:
+          type: integer
+        message:
+          type: string
+    ResponseDto:
+      oneOf:
+        - $ref: "#/components/schemas/ShortUrlDto"
+        - $ref: "#/components/schemas/ErrorDto"
+        - $ref: "#/components/schemas/ShortUrlSearchDto"
+        - $ref: "#/components/schemas/ShortUrlMetricsDto"

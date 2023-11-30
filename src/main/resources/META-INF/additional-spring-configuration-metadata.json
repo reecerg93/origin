@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "id.length",
+      "type": "java.lang.Integer",
+      "description": "Length of short URL ID."
+    },
+    {
+      "name": "permitted.chars",
+      "type": "java.lang.String",
+      "description": "Permitted characters to generate short URL ID."
+    }
+  ]
+}

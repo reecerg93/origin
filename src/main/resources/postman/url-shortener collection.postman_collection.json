@@ -1,0 +1,116 @@
+{
+  "info": {
+    "_postman_id": "6cfa0764-8381-4684-9dc4-a46d71b92506",
+    "name": "url-shortener collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "21954039"
+  },
+  "item": [
+    {
+      "name": "Get Redirection",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/urls/:shortUrlId",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "urls",
+            ":shortUrlId"
+          ],
+          "variable": [
+            {
+              "key": "shortUrlId",
+              "value": "l1uzmE7"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new Short URL ID",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"fullUrl\":\"https://fr.news.yahoo.com/sport/\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/urls",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "urls"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Short URL IDs by Full URL",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/urls?fullUrl=https://fr.news.yahoo.com/sport/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "urls"
+          ],
+          "query": [
+            {
+              "key": "fullUrl",
+              "value": "https://fr.news.yahoo.com/sport/"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Short URL ID metrics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/urls/:shortUrl/metrics",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "urls",
+            ":shortUrl",
+            "metrics"
+          ],
+          "variable": [
+            {
+              "key": "shortUrl",
+              "value": "MMCRqYv"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
