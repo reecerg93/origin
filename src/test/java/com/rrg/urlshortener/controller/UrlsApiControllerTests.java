@@ -1,6 +1,6 @@
 package com.rrg.urlshortener.controller;
 
-import com.rrg.urlshortener.AbstractTest;
+import com.rrg.urlshortener.TestUtil;
 import com.rrg.urlshortener.exception.InvalidFieldException;
 import com.rrg.urlshortener.exception.MissingFieldException;
 import com.rrg.urlshortener.exception.ResourceNotFoundException;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UrlsApiController.class)
-class UrlsApiControllerTests extends AbstractTest {
+class UrlsApiControllerTests extends TestUtil {
 
     @Autowired
     private MockMvc mockMvc;

@@ -1,6 +1,6 @@
 package com.rrg.urlshortener.service;
 
-import com.rrg.urlshortener.AbstractTest;
+import com.rrg.urlshortener.TestUtil;
 import com.rrg.urlshortener.exception.InvalidFieldException;
 import com.rrg.urlshortener.exception.MissingFieldException;
 import com.rrg.urlshortener.exception.ResourceNotFoundException;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UrlServiceTests extends AbstractTest {
+class UrlServiceTests extends TestUtil {
 
     @Mock
     private UrlRepository repo;

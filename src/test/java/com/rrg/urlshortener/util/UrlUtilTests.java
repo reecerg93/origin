@@ -1,6 +1,6 @@
 package com.rrg.urlshortener.util;
 
-import com.rrg.urlshortener.AbstractTest;
+import com.rrg.urlshortener.TestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class UrlUtilTests extends AbstractTest {
+class UrlUtilTests extends TestUtil {
 
     private static final Integer ID_LENGTH = 7;
 
