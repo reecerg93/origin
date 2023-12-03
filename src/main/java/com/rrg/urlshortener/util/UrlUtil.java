@@ -12,11 +12,11 @@ import java.util.Random;
 @Component
 public class UrlUtil {
 
-    private final Integer idLength;
+    private final int idLength;
     private final String permittedChars;
     private final Random random = new Random();
 
-    public UrlUtil(@Value("${id.length}") Integer idLength, @Value("${permitted.chars}") String permittedChars) {
+    public UrlUtil(@Value("${id.length}") int idLength, @Value("${permitted.chars}") String permittedChars) {
         this.idLength = idLength;
         this.permittedChars = permittedChars;
     }
