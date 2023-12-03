@@ -44,13 +44,12 @@ public class UrlServiceImpl implements UrlService {
             throw new MissingFieldException("URL isn't provided");
         }
         if (util.isValidUrl(fullUrl)) {
-            var generateId = true;
             var shortUrlId = StringUtils.EMPTY;
             var attempt = 1;
-            while (generateId && attempt <= attemptLimit) {
+            while (attempt <= attemptLimit) {
                 shortUrlId = util.generateId();
                 if (repo.findByShortUrlId(shortUrlId).isEmpty()) {
-                    generateId = false;
+                    break;
                 } else {
                     shortUrlId = StringUtils.EMPTY;
                     attempt++;
