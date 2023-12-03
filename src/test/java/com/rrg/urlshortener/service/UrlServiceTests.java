@@ -4,11 +4,13 @@ import com.rrg.urlshortener.TestUtil;
 import com.rrg.urlshortener.exception.InvalidFieldException;
 import com.rrg.urlshortener.exception.MissingFieldException;
 import com.rrg.urlshortener.exception.ResourceNotFoundException;
+import com.rrg.urlshortener.exception.ShortUrlIdGenerationException;
 import com.rrg.urlshortener.model.Url;
 import com.rrg.urlshortener.repository.UrlRepository;
 import com.rrg.urlshortener.service.impl.UrlServiceImpl;
 import com.rrg.urlshortener.util.UrlUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UrlServiceTests extends TestUtil {
 
+    private static final int ATTEMPT_LIMIT = 5;
+
     @Mock
     private UrlRepository repo;
     @Mock
@@ -37,8 +41,9 @@ class UrlServiceTests extends TestUtil {
     private List<Url> testUrls;
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws IllegalAccessException {
         testUrls = getTestUrls();
+        FieldUtils.writeField(service, "attemptLimit", ATTEMPT_LIMIT, true);
     }
 
     @DisplayName("JUnit test for createShortUrl method")
@@ -53,6 +58,19 @@ class UrlServiceTests extends TestUtil {
 
         var createdUrl = service.createShortUrl(TEST_FULL_URL);
         assertNotNull(createdUrl);
+    }
+
+    @DisplayName("JUnit test for createShortUrl method which throws ShortUrlIdGenerationException")
+    @Test
+    void givenFullUrl_whenCreateShortUrl_thenThrowsShortUrlIdGenerationException() {
+        var url = testUrls.get(0);
+        var fullUrl = url.getFullUrl();
+
+        when(util.generateId()).thenReturn("AbCdEfG");
+        when(util.isValidUrl(TEST_FULL_URL)).thenReturn(true);
+        when(repo.findByShortUrlId("AbCdEfG")).thenReturn(Optional.of(url));
+
+        assertThrows(ShortUrlIdGenerationException.class, () -> service.createShortUrl(fullUrl));
     }
 
     @DisplayName("JUnit test for createShortUrl method which throws MissingFieldException")

@@ -27,6 +27,11 @@ public class ControllerExceptionHandler {
         return createResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ShortUrlIdGenerationException.class)
+    public ResponseEntity<ErrorDto> shortUrlIdGenerationException(ShortUrlIdGenerationException e) {
+        return createResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> globalExceptionHandler(Exception e) {
         return createResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

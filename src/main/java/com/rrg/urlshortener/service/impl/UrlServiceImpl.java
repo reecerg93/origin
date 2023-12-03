@@ -3,6 +3,7 @@ package com.rrg.urlshortener.service.impl;
 import com.rrg.urlshortener.exception.InvalidFieldException;
 import com.rrg.urlshortener.exception.MissingFieldException;
 import com.rrg.urlshortener.exception.ResourceNotFoundException;
+import com.rrg.urlshortener.exception.ShortUrlIdGenerationException;
 import com.rrg.urlshortener.model.Url;
 import com.rrg.urlshortener.repository.UrlRepository;
 import com.rrg.urlshortener.service.UrlService;
@@ -10,6 +11,7 @@ import com.rrg.urlshortener.util.UrlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,9 @@ import java.util.Optional;
 @Service
 @Qualifier("urlService")
 public class UrlServiceImpl implements UrlService {
+
+    @Value("${attempt.limit}")
+    private int attemptLimit;
 
     private final UrlUtil util;
     private final UrlRepository repo;
@@ -41,11 +46,18 @@ public class UrlServiceImpl implements UrlService {
         if (util.isValidUrl(fullUrl)) {
             var generateId = true;
             var shortUrlId = StringUtils.EMPTY;
-            while (generateId) {
+            var attempt = 1;
+            while (generateId && attempt <= attemptLimit) {
                 shortUrlId = util.generateId();
                 if (repo.findByShortUrlId(shortUrlId).isEmpty()) {
                     generateId = false;
+                } else {
+                    shortUrlId = StringUtils.EMPTY;
+                    attempt++;
                 }
+            }
+            if (StringUtils.EMPTY.equals(shortUrlId)) {
+                throw new ShortUrlIdGenerationException("Couldn't generate Short URL ID");
             }
             return saveUrl(fullUrl, shortUrlId);
         }
