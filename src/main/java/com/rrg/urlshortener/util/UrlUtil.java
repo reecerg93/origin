@@ -12,14 +12,11 @@ import java.util.Random;
 @Component
 public class UrlUtil {
 
-    private final int idLength;
-    private final String permittedChars;
+    @Value("${id.length}")
+    private int idLength;
+    @Value("${permitted.chars}")
+    private String permittedChars;
     private final Random random = new Random();
-
-    public UrlUtil(@Value("${id.length}") int idLength, @Value("${permitted.chars}") String permittedChars) {
-        this.idLength = idLength;
-        this.permittedChars = permittedChars;
-    }
 
     public String generateId() {
         var idBuilder = new StringBuilder();
