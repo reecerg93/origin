@@ -18,9 +18,7 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -94,7 +92,7 @@ public class UrlServiceImpl implements UrlService {
         }
         fullUrl = util.sanitiseUrl(fullUrl);
         if (util.isValidUrl(fullUrl)) {
-            return Optional.of(repo.findAllByFullUrl(fullUrl)).orElse(new ArrayList<>());
+            return repo.findAllByFullUrl(fullUrl);
         }
         throw new InvalidFieldException(String.format("%s isn't a valid URL, it needs a protocol, domain and TLD", fullUrl));
     }
