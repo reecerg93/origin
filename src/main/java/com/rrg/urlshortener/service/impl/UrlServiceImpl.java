@@ -25,6 +25,8 @@ import java.util.List;
 @Qualifier("urlService")
 public class UrlServiceImpl implements UrlService {
 
+    private static final String URL_FORMAT_ERROR = "%s isn't a valid URL, it needs a protocol, domain and TLD";
+
     @Value("${attempt.limit}")
     private int attemptLimit;
 
@@ -58,7 +60,7 @@ public class UrlServiceImpl implements UrlService {
             }
             return saveUrl(fullUrl, shortUrlId);
         }
-        throw new InvalidFieldException(String.format("%s isn't a valid URL, it needs a protocol, domain and TLD", fullUrl));
+        throw new InvalidFieldException(String.format(URL_FORMAT_ERROR, fullUrl));
     }
 
     @Override
@@ -72,7 +74,7 @@ public class UrlServiceImpl implements UrlService {
             return headers;
         } catch (URISyntaxException | MalformedURLException e) {
             log.error("{} is persisted but isn't a valid URL", url.getFullUrl(), e);
-            throw new InvalidFieldException(String.format("%s isn't a valid URL, it needs a protocol, domain and TLD", url.getFullUrl()));
+            throw new InvalidFieldException(String.format(URL_FORMAT_ERROR, url.getFullUrl()));
         }
     }
 
@@ -94,7 +96,7 @@ public class UrlServiceImpl implements UrlService {
         if (util.isValidUrl(fullUrl)) {
             return repo.findAllByFullUrl(fullUrl);
         }
-        throw new InvalidFieldException(String.format("%s isn't a valid URL, it needs a protocol, domain and TLD", fullUrl));
+        throw new InvalidFieldException(String.format(URL_FORMAT_ERROR, fullUrl));
     }
 
     @Override
