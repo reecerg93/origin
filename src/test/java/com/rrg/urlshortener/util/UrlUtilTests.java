@@ -37,10 +37,10 @@ class UrlUtilTests extends TestUtil {
 
     @DisplayName("JUnit test for isValidUrl method which returns false")
     @Test
-    void givenUrl_whenIsValidUrl_thenReturnFalse() {
-        var validUrl = util.isValidUrl(INCORRECT_TEST_FULL_URL);
+    void givenUrl_whenIsInvalidUrl_thenReturnFalse() {
+        var invalidUrl = util.isValidUrl(INCORRECT_TEST_FULL_URL);
 
-        assertFalse(validUrl);
+        assertFalse(invalidUrl);
     }
 
     @DisplayName("JUnit test for sanitiseUrl method")
